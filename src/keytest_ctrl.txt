@@ -1,0 +1,61 @@
+ctrl and:
+
+
+q: 17
+w: 23
+e: 5
+r: 18
+t: 20
+y: 25
+u: 21
+i: 9
+o: 15
+p: 16
+[: 27 (slight delay)
+]: 29
+\: 28 (also ctrl-4)
+
+a: 1
+s: 19
+d: 14
+f: 6
+g: 7
+h: 8
+j: 10
+k: 11
+l: 12
+;: none
+': none
+z: 26
+x: 24
+c: 3
+v: 22
+b: 2
+n: 14
+m: 10 *enter*
+,: none 
+.: none
+/: 31
+
+
+1: none
+2: 0
+3: 27 (slight delay)
+4: 28
+5: 29
+6: 30
+7: 31
+8: 263
+9: none
+0: none
+
+ctrl-keypad-plus: 109
+
+without control held, my term's keypad and other mappings:
+ins: 331
+del: 330
+hom: 126
+pup: 339
+pdn: 338
+end: 126
+numlock: same as F1

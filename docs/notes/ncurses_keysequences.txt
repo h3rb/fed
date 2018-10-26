@@ -1,0 +1,67 @@
+F1:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  49
+Key pressed was:  49
+Key pressed was: 126
+F2:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  49
+Key pressed was:  50
+Key pressed was: 126
+F3:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  49
+Key pressed was:  51
+Key pressed was: 126
+F4:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  49
+Key pressed was:  52
+Key pressed was: 126
+Numpad Home:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 119
+Numpad PgUp:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 121
+Numpad PgDn:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 115
+Numpad INS:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 112
+Numpad DEL:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 110
+Numpad End:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 113
+Other HOME:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  49
+Key pressed was: 126
+Other END:
+Key pressed was:  27
+Key pressed was:  91
+Key pressed was:  52
+Key pressed was: 126
+Numpad PLUS:
+Key pressed was:  27
+Key pressed was:  79
+Key pressed was: 108
+Numpad Slash: 266
+Numpad Asterisk: 267
+Numpad Minus: 268
+Numpad NumLock/Mouse Button: 265
+

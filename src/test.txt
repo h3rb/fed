@@ -1,0 +1,280 @@
+1 this is the first line
+2 this is the second line
+3 this is the third line
+4 this is the four line
+5 this is the five line
+6 this is the sex line
+7 this is the seven line
+8 this is the eight line
+9 this is the nine line
+10 this is the tenth line
+<span style="color: #000088;">$foo</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">45</span><span style="color: #339933;">;</span><br />
+<span style="color: #b1b100;">for</span> <span style="color: #009900;">&#40;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">1</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <span style="color: #000088;">$foo</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span> <span style="color: #009900;">&#41;</span><span style="color: #009900;">&#123;</span><br />
+&nbsp; <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">&quot;<span style="color: #006699; font-weight: bold;">$foo</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: #339933;">;</span> &nbsp;<span style="color: #339933;">--</span><span style="color: #000088;">$foo</span><span style="color: #339933;">;</span><br />
+<span style="color: #009900;">&#125;</span>
+
+
+
+
+const struct color_element color_table [] =
+{
+ { "\x1b[30m",   "black",      "#000000" },0
+ { "\x1b[34m",   "indigo",     "#000033" },1
+ { "\x1b[32m",   "green",      "#007700" },2
+ { "\x1b[36m",   "aquamarine", "#333300" },3
+ { "\x1b[31m",   "crimsin",    "#770000" },4
+ { "\x1b[35m",   "purple",     "#330033" },5
+ { "\x1b[33m",   "orange",     "#006666" },6
+ { "\x1b[37m",   "grey",       "#777777" },7
+ { "\x1b[30;1m", "charcoal",   "#000066" },8
+ { "\x1b[34;1m", "blue",       "#000077" },9
+ { "\x1b[32;1m", "lime",       "#880000" },10
+ { "\x1b[36;1m", "cyan",       "#330055" },11
+ { "\x1b[31;1m", "red",        "#FF0000" },12
+ { "\x1b[35;1m", "magenta",    "#FF00FF" },13
+ { "\x1b[33;1m", "yellow",     "#00FFFF" },14
+ { "\x1b[37;1m", "white",      "#FFFFFF" },15
+ { "\x1b[1m",    "bold",       "#FFFFFF" },
+ { "\x1b[5m",    "flashing",   "#A6A6A6" },
+ { "\x1b[7m",    "inverse",    "#000088" },
+ { "\x1b[0m",    "normal",     "#777777" },
+ { " ",          " ",          " " }
+ 
+ int decodeurl( char *code )
+ int hex_color( char c )
+ int color_decode( char *color )
+ char *clip_urlcode( char **s )
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+void encodeblock( unsigned char in[3], unsigned char out[4], int len )
+
+ 
+void encode( FILE *infile, FILE *outfile, int linesize )
+
+ 
+void decodeblock( unsigned char in[4], unsigned char out[3] )
+
+
+void decode( FILE *infile, FILE *outfile )
+
+  
+char *b64_message( int errcode )
+ 
+ 
+ 
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+void showuse( int morehelp )
+eijoaioja
+/*
++-------------------------+
+|      ___           _    | fed : a linux console editor
+|     / __)         | |   |
+|   _| |__ _____  __| |   | (c)2011 h. elwood gilliland iii
+|  (_   __) ___ |/ _  |   |
+|    | |  | ____( (_| |   | supports: figlets, GeSHi
+|    |_|  |_____)\____|   |
+|                         | dependencies: gcc, php
++-------------------------+
+ */
+
+#include <ncurses.h>
+#include <stdbool.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/ioctl.h>
+#include <sys/unistd.h>
+#include <signal.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <stdarg.h>
+#include <malloc.h>
+//#include <curses.h>
+//#include <term.h>
+//#include <termcap.h>
+
+#define EXE_FILE "fed"
+
+/*
+ * Accommodate old non-Ansi compilers.
+ */
+#if defined(TRADITIONAL)
+#define const
+#define args( list )            ( )
+#define COMMAND( fun )          void fun( )
+#define DECLARE_HIT_FUN( fun )          void fun( )
+#else
+#define args( list )            list
+#define COMMAND( fun )          CMD_FUN   fun
+#define DECLARE_HIT_FUN( fun )          HIT_FUN   fun
+#endif
+
+/*
+ * Short scalar types.
+ */
+#if    !defined(FALSE)
+#define FALSE     0
+#endif
+
+#if    !defined(TRUE)
+#define TRUE     1
+#endif
+
+#if    defined(_AIX)
+#if    !defined(const)
+#define const
+#endif
+#define unix
+#else
+#endif
+
+/*
+ * Structs
+ */
+typedef struct  fedfile       FEDFILE;
+typedef struct  plugin        PLUGIN;
+typedef struct  result        RESULT;
+typedef struct  string_list   STRING_LIST;
+typedef struct  gbuffer       GBUFFER;
+
+struct string_list {
+ char *str;
+ STRING_LIST *next;
+};
+
+struct plugin {
+ char *location;
+ char *content;
+ PLUGIN *next;
+};
+
+struct result {
+ char *options;
+ char **result;
+ int results;
+};
+
+struct fedfile {
+ int *highlight; // highlighting buffer
+ char *fileraw;
+ char *lang;
+ char *filename;
+
+ /* Selection */
+ int grid;
+ char *begin, *end;
+
+ int type;
+ int inserting;
+ int r,c;
+ int total_lines;
+ FEDFILE *next;
+};
+
+struct gbuffer {
+ char *content;
+ char *colormap;
+ int w,h,mode;
+};
+
+struct color_element
+{
+   char         code[10];
+   char         name[15];
+   char         css[10];
+};
+
+extern const struct color_element color_code [];
+
+#define F_ASCII  0
+#define F_BINARY 1
+
+#define VERSION      "fed 1.0 beta"
+
+/*
+ * Utility macros.
+ */
+#define UMIN(a, b)        ((a) < (b) ? (a) : (b))
+#define UMAX(a, b)        ((a) > (b) ? (a) : (b))
+#define URANGE(a, b, c)        ((b) < (a) ? (a) : ((b) > (c) ? (c) : (b)))
+#define LOWER(c)        ((c) >= 'A' && (c) <= 'Z' ? (c)+'a'-'A' : (c))
+#define UPPER(c)        ((c) >= 'a' && (c) <= 'z' ? (c)+'A'-'a' : (c))
+#define IS_VOWEL(c)             (c == 'A' || c == 'a' ||                     \
+                                 c == 'E' || c == 'e' ||                     \
+                                 c == 'I' || c == 'i' ||                     \
+                                 c == 'O' || c == 'o' ||                     \
+                                 c == 'U' || c == 'u'      )
+
+/*
+ * main.c
+ */
+
+extern int go;
+//extern int used_termcap;
+//extern char *termtype;
+//extern int term_lines;
+//extern int term_columns;
+//extern int old_term_lines;
+//extern int old_term_columns;
+extern int row,col;
+extern struct winsize window_size;
+extern struct winsize old_window_size;
+int resized args( (void) );
+void get_window_size args( (void) );
+void init args ( ( void ) );
+void loop args ( ( void ) );
+
+//#define WINWIDTH    ( used_termcap ? term_lines   : window_size.ws_row )
+//#define WINHEIGHT   ( used_termcap ? term_columns : window_size.ws_col )
+
+/*
+#define WINWIDTH  ( window_size.ws_row )
+#define WINHEIGHT ( window_size.ws_col )
+#define OLDWIDTH  ( old_window_size.ws_row )
+#define OLDHEIGHT ( old_window_size.ws_col )
+ */
+
+#define WINHEIGHT row
+#define WINWIDTH  col
+
+//#define OLDWIDTH    ( used_termcap ? old_term_lines   : old_window_size.ws_row )
+//#define OLDHEIGHT   ( used_termcap ? old_term_columns : old_window_size.ws_col )

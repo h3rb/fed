@@ -1,0 +1,4 @@
+If you compile with the option -D added to the Makefile in ../
+you are assuming this source to be compiled under GPL, and
+you will make use of this GPL licensed copy of nVaders, written
+by dettus, and modified for use in fed

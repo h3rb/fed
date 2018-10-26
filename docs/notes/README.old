@@ -1,0 +1,418 @@
++-------------------------+
+|      ___           _    | fed : a linux console editor
+|     / __)         | |   |
+|   _| |__ _____  __| |   | (c)2011 h. elwood gilliland iii
+|  (_   __) ___ |/ _  |   |
+|    | |  | ____( (_| |   | supports: figlets, GeSHi
+|    |_|  |_____)\____|   |
+|                         | dependencies: gcc, php
++-------------------------+
+
+
+About
+-----
+
+fed was started as a simple replacement text editor for the quite popular
+editor nano.  The project's founder worked with nano for years, but got sick
+of poor syntax highlighting, and the lack of familiar editor commands.  He
+used pico, before nano, and since nano hasn't changed much recently, he
+decided to write his own.
+
+Though "fed" is a text editor, it can also handle binary files.
+
+fed is released under the New BSD License.  Stay fed!
+
+
+Upgrading the Packaged Verson of GeSHi
+------------------------------------------------------------------------------
+
+Quite simply, you can probably just replace the folder geshi that is packaged
+with fed before building and installing it.  We see no reason for this to 
+change, unless GeSHi changes extensively, which it won't.
+
+
+Known Issues
+------------------------------------------------------------------------------
+
+So far we have only tested this editor via Tera Term and PuTTy on Ubuntu.
+
+If you have experienced an issue and wish to report it,
+please do so on the project page: http://sourceforge.net/projects/fed/
+
+We may not be able to fix your problem if we do not have a similar setup.
+Please report bugs to our project page and include all relevant information
+in a complete and understandible way.
+
+After the first beta version of this tool, new releases will still occur, but
+we are looking for a "caretaker" of this project.  We also encourage you to
+submit changes, patches, updates, fixes and plug-ins.
+
+To increase performance by bypassing disk operations, you may keep GeSHi in
+memory by copying GeSHi to a tmpfs or other ramdisk and then tell fed where
+this new copy of GeSHi is with the +geshi=/file/path directive.
+
+
+fed's Features
+------------------------------------------------------------------------------
+
+Binary and Text
+
+While primarily a text editor, fed can also read binary files and you can
+edit the octal values of the individual bytes.  fed will try to detect
+the appropriate encoding type or you can force it with a command line
+directive (See "Command Line Options" for more)
+
+Syntax Highlighting
+
+Using the tasty GeSHi plug-in for PHP, fed uses GeSHi to display your file
+properly highlighted on the screen.  This feature can be suppressed with
+the command line option -geshi and you can change the highlighting or
+disable it inside the editor
+
+Multi-tabbed View
+
+Load multiple files into the editor and switch between them.  If only one
+file is loaded into fed, tabs are suppressed.
+
+Deletion Buffer versus ClipBoard
+
+A deletion buffer is not a clipboard, but a separate series of lines deleted
+using the Kut (not Cut) command, similar to nano.  A clipboard is a place where
+the common PC commands "Cut, Paste, Copy" are used to manipulate selected areas.
+The editor fed also supports the "grid selection" which is helpful for
+programming and using fed to edit columnar data.
+
+Context Menu and Plug-ins
+
+The context menu lets you pick a plug-in (written in PHP) to execute on a
+selection, or the current word. See the "Plug-ins" section for more
+information on this feature.
+
+
+.fed Configuration
+------------------------------------------------------------------------------
+
+A .fed file in your home directory may contain the following line at the top
+of the file:
+
+fed <default command line>
+^^^
+optional
+
+A .fed file in your home directory may include a number of paths to .php files
+after the above line, which point to plug-ins you wish to have installed into
+the context menu upon execution.
+
+The root admin may place a .fed file at the location /etc/fed/.fed which is
+readable by everyone, however a .fed in the user's home directory will append
+any plug-ins and override the root's command line default.  If such a file
+does not exist, fed will load with shipped plug-ins and the compiled default
+configuration.
+
+See the section "command line options" below for what you can configure.
+
+
+Interface
+------------------------------------------------------------------------------
+
+- fed uses two sets of bindings to identical commands
+- the first set is the "intended", and the second identical command set is
+  called "fallback"
+- it is intended to be easy to use, visually interesting and minimal
+
+"Intended" Commands:
+
+The intended command set may not work properly on all machines and terminals.
+However, it is the ideal set of commands and the preferred editing set.
+Commands are case-insensitive except for [,] and {,}
+
+Ctrl-Z  : Undo (up to 50 per file! warning: memory hog)
+Ctrl-Y  : Redo
+
+F1,Ctrl-/  : Help (x to exit, PageUp/PageDown, Arrows)
+F2,Ctrl-L  : Load...
+F3,Ctrl-S  : Save
+F4,Ctrl-Q  : Close (and prompt to save)
+F5         : Configure/disable GeSHi
+
+Ctrl-I  : Insert file at cursor
+Ctrl-E  : Export a copy as... (note: creates a new tab!)
+Ctrl-N  : New file
+
+Ctrl-F  : Find
+Ctrl-R  : Find and Replace
+Ctrl-G  : Goto line #
+
+Ctrl-K  : Kut this line and append it to the deletion buffer (not clipboard)
+Ctrl-U  : Paste a copy of the deletion buffer (not clipboard)
+
+Ctrl-\  : Begin a grid selection
+Ctrl-]  : End/clear/begin a selection, or select current word if none started
+
+Ctrl-X  : Cut selection to clipboard
+Ctrl-C  : Copy selection to clipboard
+Ctrl-V  : Paste selection from clipboard
+
+Ctrl-P  : "Ctrl-Minus" Go back one file tab (for multitabbed)
+Ctrl-O  : "Ctrl-Equals" Go forward one file tab (for multitabbed)
+
+Delete  : Delete selection (while selecting), or Backspace/Del
+Insert  : Toggle insert mode
+Page Key: Move up or down by one screen length
+Arrows  : Move the cursor
+Ctrl-B  : (Ctrl-Comma) "Free move" mode (moves beyond EOL)
+
+Ctrl-J  : Justify this line
+Ctrl-T  : Tab
+Ctrl-U  : Mops up (U)nnecessary spaces at the ends of the lines selected, or all
+Ctrl-0  : "Ctrl-zero" brings up the octal inserter
+Enter   : When in binary mode, enter lets you modify an octal value
+
+Ctrl-4  : Immediate Emergency Exit (without saving)
+
+Ctrl-7  : Suspend process (like Ctrl-Z in other programs)
+
+Command Line Options
+------------------------------------------------------------------------------
+
+Usage: fed [options] [filename(s)...]
+
+Where 'options' is one or more of:
+
+--help         Displays this
+-h             Displays this
+-help          Suppresses the bottom line helper cheat sheet
+-ruler         Suppresses the column ruler
+-geshi         Disables syntax highlighting
++geshi=/path   Tells fed which copy of GeSHi to use
+-plugins       Loads no plugins except GeSHi
+-fed           Ignores .fed configuration files (both root and home)
+-root          Ignores root .fed if it exists
++count         Fed will simply load and count the lines for each file, then exit
++b64           transforms fed into Bob Trower's b64 utility
++free          fed starts with "Free Move" mode on
++binary        Forces all files to be read in as binary (cannot turn off)
++fedhome=path  Sets the path to fed's home (/usr/bin and /etc/fed as default)
++tabs=5        Number of spaces that mimic a \t (5 is default)
+
+And 'filename(s)' is one or more:
+
+<filename>     Loads the filename into a "tab"
+b+<filename>   Forces binary on a file
+a+<filename>   Forces ascii on a file
+u+<filename>   Forces UTF (WIP!)
+
+*** Loads filename, and renames it to target (saves when you tell it to):
+(b,a,u+)<"/path/to/filename">^(b,a,u+)<"path/to/target">
+
+Examples:
+
+fed somefile.txt
+fed a+somefile.tar.gz
+fed /some/file/1.txt /some/file/2.txt b+/some/other/file.bin
+fed /some/file/named.txt^/some/file/renamed.txt
+fed b+/some/file/somewhere.txt^a+/some/file/elsewhere.txt
+fed "somefile.txt"
+fed b+"/some/other/file.txt"
+fed
+fed b+
+
+The final example in the list above creates a new binary file for editing.
+The one above that one (fed alone) creates a new ascii file for editing,
+and is the same as "fed a+"
+
+Note: if you need to create or edit a file called b+, type fed "b+"
+
+
+Editor Layout
+------------------------------------------------------------------------------
+
+This section may look a little weird, but the goal is to show you what it will
+look like to be using fed:
+
+Example default screen 80x6:
+
+[<yourfilename>][ anotherfile ][ fi... ] [ etc.. ] [ tab5 ]
+0...5....A....E...|20...,....|30..,....|....,....|....,....|60..,..70|.........V
+your text file
+[: 
+Line 123/783921             Col 44       [somefile.name]    BINARY     Modified 
+Ctrl+ H:elp [,]:Sel X:Cut C:opy V:Paste F:ind Z:un O:log Y:re L:oad S:ave Q:uit
+
+Above: A Column Ruler appears at the top of the view, and a Status Readout appears
+at the bottom.  The current file you are editing appears in the Status Readout
+(see below).  There is also the command prompt (lower left) and the cheat sheet
+(bottom line).
+
+Legend:
+
+ - Column Ruler (top)
+
+0...5....A....E...|20...,....|30..,....|....,....|....,....|60..,..70|.........V
+
+Can be suppressed with the command line option -ruler
+
+With the command line option +clock you may see this one:
+
+0...5....A....E...|20...,....|30..,....|....,....|..12:52a.|60..,..70|.........V
+
+ - Command Entry Prompt
+
+[: 
+
+Allows you to type commands and have the editor respond in "Fallback" mode and 
+some other modes. This prompt appears and disappears in "Intended" mode.
+
+ - Status Readout (bottom)
+
+Status readouts come in 2 modes:
+
+-First mode (option -1, default):
+Line 123/7821 Col 44 [/some/full/path/file.name] Selecting   BINARY  Modified 
+
+-Second mode (option -2):
+L 123/7831:44/80 [somefile.name] INS BIN Mod [#oct] Saved
+
+First we see the file line and then the column of the current position, followed
+by the filename in brackets.
+
+If you loaded fed without -help the following line appears below the status bar:
+
+Ctrl+ H:elp [,]:Sel X:Cut C:opy V:Paste F:ind Z:un O:log Y:re L:oad S:ave Q:uit
+
+Or the Fallback cheat sheet, if -help is not used and +fallback is used:
+
+?:H:elp [,]:Sel X:Cut C:opy V:Paste F:ind Z:un O:log Y:re L:oad S:ave Q:uit
+
+
+
+Plug-ins
+------------------------------------------------------------------------------
+
+
+Overview
+
+Plug-ins come in two flavors: vetted and non-vetted.  A vetted plug-in is
+included with the distribution, while a non-vetted plug-in is one you've
+installed yourself, from some source, that hasn't been vetted.
+
+To have your plug-ins vetted, they must be submitted under the same license
+(New BSD) as fed, and they also must be posted or otherwise sent to the fed
+developers.  Plug-ins will be vetted when they are not malicious, explain
+themselves thoroughly and precisely, and if they are unique or useful.
+
+Vetted plug-ins that ship with fed:
+
+ - ispell checker (works only if you have ispell installed)
+ - figlet generation
+ - htmltidy (works only if you have libtidy+deps installed to php5)
+ - xmltidy (works only if you have libtidy+deps installed to php5)
+
+Installation
+
+Users may install fed plug-ins by including them in their .fed configuration
+file, as mentioned above in the section ".fed configuration"
+
+Authoring Plug-ins
+
+Helper code is found in the authors/ folder of the package.
+
+To author a plug-in, simply write a PHP file, with the following special
+circumstances:
+
+1) fed will supply a variable $INCOMING inserted after the leading ?php tag
+   this variable contains an array:
+
+    $INCOMING['base64encoded']    selected data
+    $INCOMING['row']              cursor position
+    $INCOMING['col']              cursor position
+    $INCOMING['binary']           (true===binary)
+
+   Vetted plug-ins will make proper use of this information.
+    
+2) fed will expect your plug-in to output results in the following format:
+
+<base64 encoded: output to console>--fedboundary--<base64 encoded: data in a list>--fedboundary--<base64 encoded: data in a list>
+
+"output to console" section
+
+The "output to console" section is output, formatted with the "plug-in
+special code", that provides feedback to a user and options.  If "output
+to console" section is empty (ie if the output from the php file starts
+with --fedboundary--), no user selection is provided and the
+"data in a list" sections are immediately inserted without prompt.  
+Insertion will overwrite a selection if a selection is being made.
+
+"data in a list" section
+
+The "data in a list" section is a series of bounded base64 encoded data
+segments which correspond to options presented in the "output to console"
+section, where each subsequent entry is numbered consecutively starting
+from 0.  Each "data in a list" section can be bound using "plug-in special
+code" in the "output to console" section of the output from the PHP plug-in.
+
+"plug-in special code"
+
+Plug-in special code is the ASCII text contained in the base64 encoded
+section "output to console"; this code is used to bind results of a PHP
+plug-in operation to a formatted menu, so the user may decide what to do
+before committing the result.  In the event that your plug-in wishes to
+have a "do nothing" option, simply bind a result to a non-existant list
+item, such as -1.
+
+Each line of the "output to console" section must contain the following,
+otherwise no user options are presented and every returned data element
+will be used consecutively:
+
+<option name>:<single key-stroke or "ESC">:<list element index>
+
+Example 1, "output to console" section: Two options
+
+Option One:1:0
+Option Two:2:1
+
+Example 2, "output to console" section: Made-up output from a PHP plug-in
+
+Translate into (L)atin:L:0
+Translate into (F)rench:F:1
+Translate into (E)nglish:E:2
+(X) Leave it alone:ESC,X:-1
+
+Example 2, "data in a list" section, split by --fedboundary-- and decoded base64:
+
+Ecere
+Ecrire
+Write
+
+
+Appendix: What Could Be
+------------------------------------------------------------------------------
+
+These are just some ideas and notes about future features that we may or may
+not get a chance to implement.
+
+ # Notes, overlays and file-specific histories
+ - .yourfile.fed ; a file that appears next to the file you are/were editing,
+   that contains persistence information such as sticky notes, undo history,
+   and other data that tells fed about previous sessions, suppressed with
+   -memory, activated with +memory
+
+ # Support for more than 16 colors
+
+ # Full integration with man, and becoming a legit unix package!
+
+ # Being packaged with some tasty linux distributions
+
+ # Smarter plug-in integration (is it even possible?)
+ - possibly with other scripting languages such as bourne shell and perl
+
+ # Auto-complete and Intellisense
+
+ # co-installed with a graphical version that works in both Gnome and KDE
+
+ # one that works on your friggin' iphone or android time waster
+
+ # Tighter, optimized undo with keystroke memory instead of simple snapshots
+
+ # a confirmation question for "similar" files or educated file guesses 
+   during load from command line

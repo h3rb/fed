@@ -1,0 +1,5 @@
+#!/bin/csh
+
+cd $cwd
+nohup make clean 
+nohup make

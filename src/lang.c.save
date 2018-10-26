@@ -1,0 +1,183 @@
+/*
++-------------------------+
+|      ___           _    | fed : a linux console editor
+|     / __)         | |   |
+|   _| |__ _____  __| |   | (c)2011 h. elwood gilliland iii
+|  (_   __) ___ |/ _  |   |
+|    | |  | ____( (_| |   | supports: figlets, GeSHi
+|    |_|  |_____)\____|   |
+|                         | dependencies: gcc, php
++-------------------------+
+ */
+
+#include "fed.h"
+#include "lang.h"
+#include "io.h"
+#include "strings.h"
+#include "cli.h"
+
+/*
+  Looks for a file in the language directory called "index.txt"
+  Language file specification:
+   <symbol> <color#>
+  Where color# corresponds to colors 0-9 in color.h
+  The following definitions should appear at the end of the file, in this order:
+  If symbol is set to "", or '', this indicates '<string>' coloring
+  If the symbol is set to //, <!---->, #comment, ;comment, or / * * / (without spaces) , this indicates comment coloring
+ */
+
+LANG *langs=NULL;
+bool langs_loaded=false;
+
+LANG *find_lang( char *lang ) {
+ LANG *search=langs;
+ while ( search ) {
+  if ( equals(lang,search->name) ) return search;
+  search=search->next;
+ }
+ return NULL;
+}
+
+char *colorize( char *code, LANG *lang ) {
+ int len=strlen(code);
+ char *colored=malloc(sizeof(char)*(len+1));
+ int i;
+ for ( i=0; i<len; i++ ) if ( code[i] == '\n' ) colored[i]='\n'; else colored[i]='7';
+ colored[len]='\0'; // end of file
+ if ( !lang ) return colored;
+ i=0;
+ while ( i < lang->symbols ) {
+  // Quotation rules
+  if ( equals(lang->symbol[i],"\"\"" ) ) {
+  } else
+  if ( equals(lang->symbol[i],"''" ) ) {
+  } else
+  // Comment rules
+  if ( equals(lang->symbol[i],"/**/") ) {
+  } else
+  if ( equals(lang->symbol[i],"//" ) ) {
+  } else
+  if ( equals(lang->symbol[i],"<!---->" ) ) {
+  } else
+  if ( equals(lang->symbol[i],"#comment" ) ) {
+  } else
+  if ( equals(lang->symbol[i],";comment" ) ) {
+  }
+  // Specific rules
+  else {
+   char *p=code;
+   int idx=0;
+   int slen=strlen(lang->symbol[i]);
+   while ( *p != '\0' && idx < len-slen ) {
+    char buf[slen+1];
+    char *q=buf;
+    int j;
+    for ( j=0; j<slen; j++ ) {
+     *q=*(p+j);
+     q++;
+    }
+    *q='\0';
+    if ( equals( q, lang->symbol[i] ) ) for ( j=0; j<slen; j++ ) colored[j+idx]=num_to_char(lang->color[i]);
+    idx++;
+   }
+  }
+  i++;
+ }
+ return colored;
+}
+
+void add_to_lang( LANG *lang, int color, char *symbol ) {
+ char **symbols=malloc(sizeof(char *)*(lang->symbols+1));
+ int *colors=malloc(sizeof(int *)*(lang->symbols+1));
+ int i;
+ for ( i=0; i<lang->symbols; i++ ) {
+  symbols[i]=lang->symbol[i];
+  colors[i]=lang->color[i];
+ }
+ symbols[lang->symbols]=str_dup( symbol );
+ colors[lang->symbols]=color;
+ lang->symbols++;
+ free(lang->symbol);
+ lang->symbol=symbols;
+ free(lang->color);
+ lang->color=colors;
+}
+
+#define NOT_END_OF_SEGMENT(c)  ( *c != ' ' && *c != '\n' && *c != '\r' && *c != '\0' )
+
+void load_lang( char *filename, char *lang ) {
+ char *q,*r,*s,*file;
+ printf( "Loading file '%s' defining lang '%s'\n", filename, lang );
+ file=fread_ascii(filename);
+ if ( file && strlen(file) > 0 ) {
+  LANG *new=malloc(sizeof(LANG));
+  new->symbols=0;
+  new->symbol=NULL;
+  new->color=NULL;
+  new->name=str_dup(lang);
+  new->next=langs;
+  langs=new;
+  q=file;
+  while ( *q != '\0' ) {
+   char symbol[1024];
+   char color[24];
+   r=symbol;
+   s=color;
+   while ( *q == '\n' || *q == '\r' ) q++;
+   while ( NOT_END_OF_SEGMENT(q) ) {
+    *r=*q; r++; q++;
+   }
+   *r='\0';
+   if ( *q == ' ' ) {
+    int color_num=7;
+    q++;
+    while ( NOT_END_OF_SEGMENT(q) ) {
+     *s=*q; s++; q++;
+    }
+    *s='\0';
+    if ( strlen(color) > 0 ) color_num=atoi(color);
+    add_to_lang( new, color_num, r );
+   }
+   while ( *q == ' ' ) q++;
+  }
+ }
+}
+
+void load_langs() {
+ char buf[2048];
+ char *idx;
+ // Create a default, empty language.
+ LANG *new=malloc(sizeof(LANG));
+ new->symbols=0;
+ new->name=str_dup("default");
+ new->symbol=NULL;
+ new->color=NULL;
+ new->next=NULL;
+ langs=new;
+ // Load each language file listed in the index, if there is one.
+ sprintf( buf, "%s/index.txt", lang_home ? lang_home : "/etc/fed/lang" );
+ printf( "Looking for language definitions in %s/index.txt\n", lang_home ? lang_home : "/etc/fed/lang" );
+ idx=fread_ascii( buf );
+ if ( idx && strlen(idx) > 0 ) {
+  char fn[256];
+  char filename[1024];
+  char trimmed[256];
+  char *p=idx;
+  while ( *p != '\0' ) {
+   char *q=fn;
+   char *Q=trimmed;
+   bool found_dot=false;
+   while ( *p != '\0' && *p != '\n' ) {
+    *q=*p;
+    if ( *q == '.' ) found_dot=true;
+    if ( !found_dot ) { *Q=*p; Q++; }
+    p++; q++;
+   }
+   *Q='\0';
+   *q='\0';
+   sprintf( filename, "%s/%s", lang_home ? lang_home : "/etc/fed/lang", q );
+   load_lang( filename, trimmed );
+  }
+ }
+ langs_loaded=true;
+}

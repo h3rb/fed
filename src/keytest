@@ -1,0 +1,3 @@
+#!/bin/csh
+gcc -o keytester keytester.c -lncurses
+./keytester

@@ -1,0 +1,25 @@
+#!/bin/csh
+# must be run as root from fed package folder!
+
+echo "Installing fed, the friggin' linux console editor"
+echo "Executing script 'recompile'"
+./recompile > /dev/null
+echo "Removing /etc/fed folder contents, and/or creating a new /etc/fed"
+rm -rf /etc/fed/* > /dev/null
+mkdir /etc/fed
+cp fed /etc/fed/
+cp fed /usr/bin/
+
+tar -cvf /etc/fed/plugins.tar plugins/ > /dev/null
+tar -cvf /etc/fed/lang.tar lang/ > /dev/null
+
+cd /etc/fed
+rm -rf /etc/fed/plugins
+rm -rf /etc/fed/lang
+tar -xvf plugins.tar
+tar -xvf lang.tar
+rm -f plugins.tar
+rm -f lang.tar
+
+chmod a+r -R /etc/fed
+chmod a+r /usr/bin/fed
